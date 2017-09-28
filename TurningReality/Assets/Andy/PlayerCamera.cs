@@ -11,6 +11,14 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField]
     float minSizeY = 5f;
 
+    private void Start()
+    {
+        if (players.Length == 0)
+        {
+            Debug.Log("Player not assigned to the camera!, drag player(s) into the players[]");
+        }
+    }
+
     void Update()
     {
         SetCameraPos();
