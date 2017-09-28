@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
 {
+    [SerializeField]
     Transform[] players;
+    [SerializeField]
+    Vector3 cameraOffset = Vector3.zero;
     [SerializeField]
     float minSizeY = 5f;
 
@@ -16,6 +19,9 @@ public class PlayerCamera : MonoBehaviour
 
     void SetCameraSize()
     {
+        if (players.Length < 2)
+            return;
+
         //Based on screen ratio
         float minSizeX = minSizeY * Screen.width / Screen.height;
 
@@ -46,9 +52,9 @@ public class PlayerCamera : MonoBehaviour
             }
         }
 
-        position.x *= 0.5f;
-        position.y *= 0.5f;
+        position.x /= players.Length;
+        position.y /= players.Length;
 
-        return position;
+        return position + cameraOffset;
     }
 }
