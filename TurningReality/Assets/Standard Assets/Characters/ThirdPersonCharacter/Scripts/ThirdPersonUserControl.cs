@@ -46,6 +46,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             if (!isJumping)
             {
                 isJumping = CrossPlatformInputManager.GetButtonDown("Jump");
+
+                if (playerControls == PlayerSlot.First)
+                {
+                    isJumping = CrossPlatformInputManager.GetButtonDown("Jump_P1");
+                }
+                else// if (playerControls == PlayerSlot.Second)
+                {
+                    isJumping = CrossPlatformInputManager.GetButtonDown("Jump_P2");
+                }
             }
         }
 
@@ -60,7 +69,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 h = CrossPlatformInputManager.GetAxis("Horizontal_P1");
                 v = CrossPlatformInputManager.GetAxis("Vertical_P1");
             }
-            else if (playerControls == PlayerSlot.Second)
+            else// if (playerControls == PlayerSlot.Second)
             {
                 h = CrossPlatformInputManager.GetAxis("Horizontal_P2");
                 v = CrossPlatformInputManager.GetAxis("Vertical_P2");
