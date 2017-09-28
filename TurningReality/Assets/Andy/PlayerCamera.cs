@@ -21,28 +21,27 @@ public class PlayerCamera : MonoBehaviour
 
     void Update()
     {
-        SetCameraPos();
-        SetCameraSize();
+        ForcePlayersWithinCameraBounds();
+        SetCameraPosition();
     }
 
-    void SetCameraSize()
+    void ForcePlayersWithinCameraBounds() //TODO The player closest to the camera in Z-axis can get pushed around by the camera border.
     {
         if (players.Length < 2)
             return;
 
-        //Based on screen ratio
-        float minSizeX = minSizeY * Screen.width / Screen.height;
+        for (int i = 0; i < players.Length; i++)
+        {
+            Vector3 viewportPos = Camera.main.WorldToViewportPoint(players[i].transform.position);
 
-        //0.5f multiplication due to ortographicalSize being half of actual size.
-        float width = Mathf.Abs(players[0].position.x - players[1].position.x * 0.5f);
-        float height = Mathf.Abs(players[0].position.y - players[1].position.y * 0.5f);
+            viewportPos.x = Mathf.Clamp01(viewportPos.x);
+            viewportPos.y = Mathf.Clamp01(viewportPos.y);
 
-        //computing the size
-        float camSizeX = Mathf.Max(width, minSizeX);
-        Camera.main.orthographicSize = Mathf.Max(height, camSizeX * Screen.height / Screen.width, minSizeY);
+            players[i].transform.position = Camera.main.ViewportToWorldPoint(viewportPos);
+        }
     }
 
-    void SetCameraPos()
+    void SetCameraPosition()
     {
         Camera.main.transform.position = GetNewCameraPos();
     }
@@ -62,7 +61,7 @@ public class PlayerCamera : MonoBehaviour
 
         position.x /= players.Length;
         position.y /= players.Length;
-        position.z = zValue;
+        position.z = -5;
 
         return cameraOffset + position;
     }
