@@ -61,7 +61,7 @@ public class PlayerCamera : MonoBehaviour
 
         position.x /= players.Length;
         position.y /= players.Length;
-        position.z = -5;
+        position.z = zValue;
 
         return cameraOffset + position;
     }
