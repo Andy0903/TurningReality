@@ -21,16 +21,6 @@ public class GlowObject : MonoBehaviour
         }
     }
 
-    private void OnMouseEnter()
-    {
-        targetColor = glowColor;
-    }
-
-    private void OnMouseExit()
-    {
-        targetColor = Color.black;
-    }
-
     private void OnDisable()
     {
         currentColor = Color.black;
@@ -44,6 +34,25 @@ public class GlowObject : MonoBehaviour
         for (int i = 0; i < materials.Count; i++)
         {
             materials[i].SetColor("_GlowColor", currentColor);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        RaycastHit hit;
+        Vector3 direction = (transform.position - Camera.main.transform.position).normalized;
+
+        if (Physics.Linecast(Camera.main.transform.position, GetComponentInChildren<Renderer>().bounds.center, out hit))
+        {
+            if (hit.transform.tag != "Player")
+            {
+                Debug.Log("Player is occluded by " + hit.transform.name);
+                targetColor = glowColor;
+            }
+            else
+            {
+                targetColor = Color.black;
+            }
         }
     }
 }
