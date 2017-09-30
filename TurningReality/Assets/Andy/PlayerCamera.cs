@@ -23,7 +23,7 @@ public class PlayerCamera : MonoBehaviour
         tanFov = Mathf.Tan(Mathf.Deg2Rad * Camera.main.fieldOfView / 2.0f);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         Vector3 vectorBetweenPlayers = players[1].position - players[0].position;
         Vector3 middlePoint = players[0].position + 0.5f * vectorBetweenPlayers;
