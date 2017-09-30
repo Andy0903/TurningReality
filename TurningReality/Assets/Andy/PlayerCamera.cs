@@ -6,10 +6,11 @@ public class PlayerCamera : MonoBehaviour
 {
     [SerializeField]
     Transform[] players;
-    [SerializeField]
-    Vector3 cameraOffset = Vector3.zero;
-    [SerializeField]
-    float minSizeY = 5f;
+
+    const float distanceMargin = 3.0f;
+    const float yOffset = 2.0f;
+    float aspectRatio;
+    float tanFov;
 
     private void Start()
     {
@@ -17,52 +18,27 @@ public class PlayerCamera : MonoBehaviour
         {
             Debug.Log("Player not assigned to the camera!, drag player(s) into the players[]");
         }
+
+        aspectRatio = Screen.width / Screen.height;
+        tanFov = Mathf.Tan(Mathf.Deg2Rad * Camera.main.fieldOfView / 2.0f);
     }
 
     void Update()
     {
-        ForcePlayersWithinCameraBounds();
-        SetCameraPosition();
-    }
+        Vector3 vectorBetweenPlayers = players[1].position - players[0].position;
+        Vector3 middlePoint = players[0].position + 0.5f * vectorBetweenPlayers;
 
-    void ForcePlayersWithinCameraBounds() //TODO The player closest to the camera in Z-axis can get pushed around by the camera border.
-    {
-        if (players.Length < 2)
-            return;
+        Vector3 newCameraPos = new Vector3(
+            middlePoint.x,
+            middlePoint.y + yOffset,
+            Camera.main.transform.position.z);
 
-        for (int i = 0; i < players.Length; i++)
-        {
-            Vector3 viewportPos = Camera.main.WorldToViewportPoint(players[i].transform.position);
+        float distanceBetweenPlayers = vectorBetweenPlayers.magnitude;
 
-            viewportPos.x = Mathf.Clamp01(viewportPos.x);
-            viewportPos.y = Mathf.Clamp01(viewportPos.y);
+        //FoV = 2 * arctan((0.5 * distanceBetweenPlayers) / (distanceFromMiddlePoint * aspectRatio))
+        float cameraDistance = (distanceBetweenPlayers / 2.0f / aspectRatio) / tanFov;
 
-            players[i].transform.position = Camera.main.ViewportToWorldPoint(viewportPos);
-        }
-    }
-
-    void SetCameraPosition()
-    {
-        Camera.main.transform.position = GetNewCameraPos();
-    }
-
-    Vector3 GetNewCameraPos()
-    {
-        Vector3 position = Vector3.zero;
-        float zValue = float.PositiveInfinity;
-        for (int i = 0; i < players.Length; i++)
-        {
-            position += players[i].position;
-            if (zValue > players[i].position.z)
-            {
-                zValue = players[i].position.z;
-            }
-        }
-
-        position.x /= players.Length;
-        position.y /= players.Length;
-        position.z = zValue;
-
-        return cameraOffset + position;
+        Vector3 dirFromMidToPos = (newCameraPos - middlePoint).normalized;
+        Camera.main.transform.position = middlePoint + dirFromMidToPos * (cameraDistance + distanceMargin);
     }
 }
