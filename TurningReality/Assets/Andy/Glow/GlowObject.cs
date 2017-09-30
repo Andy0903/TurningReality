@@ -5,50 +5,45 @@ using UnityEngine;
 public class GlowObject : MonoBehaviour
 {
     [SerializeField]
-    Color myGlowColor;
+    Color glowColor;
     [SerializeField]
-    float myLerpFactor = 10f;
+    float lerpFactor = 10f;
 
-    private List<Material> myMaterials = new List<Material>();
-    private Color myCurrentColor;
-    private Color myTargetColor;
-
-    public bool IsClickable { get; private set; }
-
+    private List<Material> materials = new List<Material>();
+    private Color currentColor;
+    private Color targetColor;
+    
     private void Awake()
     {
         foreach (Renderer renderer in GetComponentsInChildren<Renderer>())
         {
-            myMaterials.AddRange(renderer.materials);
+            materials.AddRange(renderer.materials);
         }
     }
 
     private void OnMouseEnter()
     {
-        myTargetColor = myGlowColor;
-        IsClickable = true;
+        targetColor = glowColor;
     }
 
     private void OnMouseExit()
     {
-        myTargetColor = Color.black;
-        IsClickable = false;
+        targetColor = Color.black;
     }
 
     private void OnDisable()
     {
-        IsClickable = false;
-        myCurrentColor = Color.black;
-        myTargetColor = Color.black;
+        currentColor = Color.black;
+        targetColor = Color.black;
     }
 
     private void Update()
     {
-        myCurrentColor = Color.Lerp(myCurrentColor, myTargetColor, Time.deltaTime * myLerpFactor);
+        currentColor = Color.Lerp(currentColor, targetColor, Time.deltaTime * lerpFactor);
 
-        for (int i = 0; i < myMaterials.Count; i++)
+        for (int i = 0; i < materials.Count; i++)
         {
-            myMaterials[i].SetColor("_GlowColor", myCurrentColor);
+            materials[i].SetColor("_GlowColor", currentColor);
         }
     }
 }
