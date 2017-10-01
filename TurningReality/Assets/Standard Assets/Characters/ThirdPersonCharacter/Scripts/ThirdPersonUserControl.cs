@@ -10,7 +10,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         enum PlayerSlot
         {
             First,
-            Second
+            Second,
+            KeyboardDebug,
         }
 
 
@@ -69,7 +70,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 h = CrossPlatformInputManager.GetAxis("Horizontal_P1");
                 v = CrossPlatformInputManager.GetAxis("Vertical_P1");
             }
-            else// if (playerControls == PlayerSlot.Second)
+            else if (playerControls == PlayerSlot.Second)
             {
                 h = CrossPlatformInputManager.GetAxis("Horizontal_P2");
                 v = CrossPlatformInputManager.GetAxis("Vertical_P2");
