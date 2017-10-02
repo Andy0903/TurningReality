@@ -28,6 +28,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		Vector3 m_CapsuleCenter;
 		CapsuleCollider m_Capsule;
 		bool m_Crouching;
+        bool doubleJump = false;
 
 
 		void Start()
@@ -173,7 +174,19 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				m_IsGrounded = false;
 				m_Animator.applyRootMotion = false;
 				m_GroundCheckDistance = 0.1f;
+                doubleJump = true;
 			}
+            else
+            {
+                if (doubleJump)
+                {
+                    doubleJump = false;
+                    m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z);
+                    m_IsGrounded = false;
+                    m_Animator.applyRootMotion = false;
+                }
+            }
+            
 		}
 
 		void ApplyExtraTurnRotation()
