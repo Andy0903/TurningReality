@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class PickUpManager : MonoBehaviour
 {
-    //[SerializeField]
-    //GameObject[] powerUpPrefabs;
-    //[SerializeField]
-    //Transform[] spawnPoints;
-
     private static PickUpManager instance = null;
     public static PickUpManager Instance { get { return instance; } }
 

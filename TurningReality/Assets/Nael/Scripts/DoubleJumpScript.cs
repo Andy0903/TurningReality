@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 
-public class PowerUpScript : MonoBehaviour
+public class DoubleJumpScript : MonoBehaviour
 {
-    //public UnityStandardAssets.Characters.ThirdPerson.ThirdPersonCharacter controller;
     ThirdPersonCharacter tpc;
     public AudioClip soundFX;
     GameObject spellParticles;
     Collider col;
-    // MeshRenderer rend;
     ParticleSystem[] particleSystems;
     float timer;
     float pickupTime;
+    float powerUpTime = 10;
+    float powerUpEndsTime = 20;
+    bool powerUpEnds = true;
 
     void Start()
     {
         tpc = GameObject.FindObjectOfType<ThirdPersonCharacter>();
         col = GetComponent<Collider>();
-        //rend = GetComponent<MeshRenderer>();
         particleSystems = GetComponentsInChildren<ParticleSystem>();
     }
 
@@ -27,27 +27,31 @@ public class PowerUpScript : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            //tpc.m_JumpForce = 20f;
             GetComponent<AudioSource>().PlayOneShot(soundFX);
             pickupTime = Time.realtimeSinceStartup;
             FlipStates();
-            tpc.JumpPowerMultiplier = 2;
+            tpc.doubleJump = true;
+            powerUpEnds = false;
         }
     }
     void Update()
     {
         timer += Time.deltaTime;
 
-        if (timer >= pickupTime + 10 && col.enabled == false)
+        if (timer >= pickupTime + powerUpTime && col.enabled == false)
         {
             FlipStates();
+        }
+        if (timer >= pickupTime + powerUpEndsTime && !powerUpEnds)
+        {
+            tpc.doubleJump = false;
+            powerUpEnds = true;
         }
     }
 
     void FlipStates()
     {
         col.enabled = !col.enabled;
-        //rend.enabled = !rend.enabled;
         foreach (ParticleSystem pSys in particleSystems)
         {
             if (pSys.isPlaying)

@@ -43,8 +43,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         Vector3 m_CapsuleCenter;
         CapsuleCollider m_Capsule;
         bool m_Crouching;
-        bool doubleJump = false;
+        //bool doubleJump = false;
         ThirdPersonUserControl thirdPControl;
+        public bool doubleJump
+        {
+            get; set;
+        }
 
 
         void Start()
@@ -171,17 +175,17 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             }
         }
 
-
         void HandleAirborneMovement()
         {
             if (CrossPlatformInputManager.GetButtonDown("Jump"))
             {
                 if (doubleJump)
                 {
-                    doubleJump = false;
-                    m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower * JumpPowerMultiplier, m_Rigidbody.velocity.z);
-                    m_IsGrounded = false;
-                    m_Animator.applyRootMotion = false;
+                    DoubleJump();
+                    //doubleJump = false;
+                    //m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower * JumpPowerMultiplier, m_Rigidbody.velocity.z);
+                    //m_IsGrounded = false;
+                    //m_Animator.applyRootMotion = false;
                 }
             }
             if (thirdPControl.PlayerControls == PlayerSlot.First)
@@ -196,14 +200,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 if (CrossPlatformInputManager.GetButtonDown("Jump_P2"))
                 {
                     DoubleJump();
-                    //if (doubleJump)
-                    //{
-                    //    doubleJump = false;
-                    //    m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower * JumpPowerMultiplier, m_Rigidbody.velocity.z);
-                    //    m_IsGrounded = false;
-                    //    m_Animator.applyRootMotion = false;
-                    //}
-
                 }
             }
 
@@ -217,7 +213,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         {
             if (doubleJump)
             {
-                doubleJump = false;
+                //doubleJump = false;
                 m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower * JumpPowerMultiplier, m_Rigidbody.velocity.z);
                 m_IsGrounded = false;
                 m_Animator.applyRootMotion = false;
@@ -234,7 +230,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 m_IsGrounded = false;
                 m_Animator.applyRootMotion = false;
                 m_GroundCheckDistance = 0.1f;
-                doubleJump = true;
+                //doubleJump = true;
             }
         }
 
