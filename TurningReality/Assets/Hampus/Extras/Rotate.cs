@@ -4,35 +4,116 @@ using UnityEngine;
 
 public class Rotate : MonoBehaviour
 {
-    private Vector3 targetAngle;
-    private Vector3 currentAngle;
+    //private Vector3 targetAngle;
+    //private Vector3 currentAngle;
+    //private Vector3 previousTargetAngle;
+
+    //private float tiltAngle = 90;
+    //private bool rotating = false;
+
+    //public void Start()
+    //{
+    //    currentAngle = transform.eulerAngles;
+    //    targetAngle = currentAngle;
+    //}
+
+    //public void Update()
+    //{
+    //    if (!rotating)
+    //    {
+    //        float inputLeftRight = Input.GetAxis("RotY"),
+    //            inputUpDown = Input.GetAxis("RotX");
+
+    //        if (inputUpDown != 0 || inputLeftRight != 0)
+    //        {
+    //            Vector3 axis = Vector3.zero;
+    //            // We want to rotate the object to the left or right, and we care about which vector points forward (objects Z or Y)
+    //            if (inputUpDown != 0 && inputLeftRight == 0)
+    //            {
+    //                axis = inputUpDown * new Vector3(0, 0, 1);
+    //            }
+    //            // We want to rotate the object to the up or down, and we care about which vector points right (objects Y or X)
+    //            else if (inputUpDown == 0 && inputLeftRight != 0)
+    //            {
+    //                axis = inputLeftRight * new Vector3(1, 0, 0);
+    //            }
+
+    //            axis.Normalize();
+    //            rotating = true;
+    //            targetAngle += axis * tiltAngle;
+    //        }
+    //    }
+
+    //    currentAngle = Vector3.Lerp(currentAngle, targetAngle, Time.deltaTime * 2);
+
+    //    if (Vector3.Distance(currentAngle, targetAngle) <= 2)
+    //    {
+    //        //Snaps to target angle - remove for complete smoothness or decrease value check in bool
+    //        currentAngle = targetAngle;
+    //        rotating = false;
+    //    }
+
+    //    transform.eulerAngles = currentAngle;
+    //    print(transform.eulerAngles + " " + targetAngle);
+    //}
+
+
+    private Transform cameraTransform;
+    private Vector3 startAngle, currentAngle, targetAngle;
     private float tiltAngle = 90;
+    private bool rotating = false;
 
     public void Start()
     {
-        currentAngle = transform.eulerAngles;
-        targetAngle = currentAngle;
+        cameraTransform = Camera.main.transform;
+        startAngle = transform.eulerAngles;
+        currentAngle = startAngle;
+        targetAngle = startAngle;
     }
 
     public void Update()
     {
-        if (Vector3.Distance(currentAngle, targetAngle) <= 1)
+
+        if (!rotating)
         {
-            Vector3 rotation = Vector3.zero;
+            // Used to check whether the rotation is positive or negative
+            float inputLeftRight = Input.GetAxis("RotY"),
+                inputUpDown = Input.GetAxis("RotX");
 
-            if (Input.GetAxis("RotX") != 0)
-                rotation = (Input.GetAxis("RotX") * Camera.main.transform.forward);
-            else if (Input.GetAxis("RotY") != 0)
-                rotation = (Input.GetAxis("RotY") * Camera.main.transform.right);
+            // If register input start rotation
+            if (inputLeftRight != 0)
+            {
+                currentAngle = SetRotationToInput(Vector3.right, inputLeftRight);
+            }
+            else if (inputUpDown != 0)
+            {
+                currentAngle = SetRotationToInput(Vector3.forward, inputUpDown);
+            }
 
-            targetAngle += rotation * tiltAngle;
+            targetAngle = currentAngle * tiltAngle;
         }
-        currentAngle = new Vector3(
-        Mathf.LerpAngle(currentAngle.x, targetAngle.x, Time.deltaTime),
-        Mathf.LerpAngle(currentAngle.y, targetAngle.y, Time.deltaTime),
-        Mathf.LerpAngle(currentAngle.z, targetAngle.z, Time.deltaTime));
+        else
+        {
+            //currentAngle = Vector3.Lerp(currentAngle, Vector3.zero, Time.deltaTime);
+            startAngle += currentAngle;
+            transform.Rotate(currentAngle, Space.World);
+            print(currentAngle);
+        }
 
-        transform.eulerAngles = currentAngle;
+        if (Vector3.Distance(startAngle, targetAngle) <= tiltAngle && Vector3.Distance(targetAngle, startAngle) >= tiltAngle)
+        {
+            rotating = false;
+            startAngle = targetAngle;
+        }
+
     }
 
+    private Vector3 SetRotationToInput(Vector3 normal, float input)
+    {
+        Vector3 direction = Vector3.zero;
+        rotating = true;
+        direction = normal * input;
+        direction.Normalize();
+        return direction;
+    }
 }
