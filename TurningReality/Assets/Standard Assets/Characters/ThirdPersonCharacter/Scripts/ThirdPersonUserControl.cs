@@ -4,17 +4,16 @@ using UnityStandardAssets.CrossPlatformInput;
 
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
+    public enum PlayerSlot
+    {
+        First,
+        Second,
+        KeyboardDebug,
+    }
+
     [RequireComponent(typeof(ThirdPersonCharacter))]
     public class ThirdPersonUserControl : MonoBehaviour
     {
-        enum PlayerSlot
-        {
-            First,
-            Second,
-            KeyboardDebug,
-        }
-
-
         private ThirdPersonCharacter character;     // A reference to the ThirdPersonCharacter on the object
         private Transform cameraTransform;           // A reference to the main camera in the scenes transform
         private Vector3 cameraDirection;             // The current forward direction of the camera
@@ -22,6 +21,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private bool isJumping;                      // the world-relative desired move direction, calculated from the camForward and user input.
         [SerializeField]
         PlayerSlot playerControls = PlayerSlot.First;
+        public PlayerSlot PlayerControls
+        {
+            get { return playerControls; }
+        }
 
 
         private void Start()
@@ -52,7 +55,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 {
                     isJumping = CrossPlatformInputManager.GetButtonDown("Jump_P1");
                 }
-                else// if (playerControls == PlayerSlot.Second)
+                else if (playerControls == PlayerSlot.Second)
                 {
                     isJumping = CrossPlatformInputManager.GetButtonDown("Jump_P2");
                 }
