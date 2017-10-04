@@ -12,7 +12,14 @@ public class GlowObject : MonoBehaviour
     private List<Material> materials = new List<Material>();
     private Color currentColor;
     private Color targetColor;
+
+    GameObject mainCamera;
     
+    private void Start()
+    {
+        mainCamera = Camera.main.gameObject;
+    }
+
     private void Awake()
     {
         foreach (Renderer renderer in GetComponentsInChildren<Renderer>())
@@ -39,6 +46,8 @@ public class GlowObject : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (mainCamera.GetComponent<Camera>().enabled == false) return;
+
         RaycastHit hit;
         Vector3 direction = (transform.position - Camera.main.transform.position).normalized;
 
