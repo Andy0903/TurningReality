@@ -62,6 +62,8 @@ public class Rotate : MonoBehaviour
     private Vector3 startAngle, currentAngle, targetAngle;
     private float tiltAngle = 90;
     private bool rotating = false;
+    GameObject worldCamera;
+    GameObject mainCamera;
 
     public void Start()
     {
@@ -69,12 +71,32 @@ public class Rotate : MonoBehaviour
         startAngle = transform.eulerAngles;
         currentAngle = startAngle;
         targetAngle = startAngle;
+
+        worldCamera = GameObject.FindGameObjectWithTag("WorldCamera");
+        mainCamera = Camera.main.gameObject;
+    }
+
+    private void SwitchToWorldCamera()
+    {
+        if (worldCamera.GetComponent<Camera>().enabled == true) return;
+
+        mainCamera.GetComponent<Camera>().enabled = false;
+        worldCamera.GetComponent<Camera>().enabled = true;
+    }
+
+    private void SwitchToMainCamera()
+    {
+        if (mainCamera.GetComponent<Camera>().enabled == true) return;
+
+        mainCamera.GetComponent<Camera>().enabled = true;
+        worldCamera.GetComponent<Camera>().enabled = false;
     }
 
     public void Update()
     {
         if (!rotating)
         {
+            SwitchToMainCamera();
             // Used to check whether the rotation is positive or negative
             float inputLeftRight = Input.GetAxis("RotY"),
                 inputUpDown = Input.GetAxis("RotX");
@@ -93,6 +115,7 @@ public class Rotate : MonoBehaviour
         }
         else
         {
+            SwitchToWorldCamera();
             //currentAngle = Vector3.Lerp(currentAngle, Vector3.zero, Time.deltaTime);
             startAngle += currentAngle;
             transform.Rotate(currentAngle, Space.World);

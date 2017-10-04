@@ -11,9 +11,12 @@ public class PlayerCamera : MonoBehaviour
     const float yOffset = 2.0f;
     float aspectRatio;
     float tanFov;
+    GameObject mainCamera;
 
     private void Start()
     {
+        mainCamera = Camera.main.gameObject;
+
         if (players.Length == 0)
         {
             Debug.Log("Player not assigned to the camera!, drag player(s) into the players[]");
@@ -25,6 +28,8 @@ public class PlayerCamera : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (mainCamera.GetComponent<Camera>().enabled == false) return;
+
         Vector3 vectorBetweenPlayers = players[1].position - players[0].position;
         Vector3 middlePoint = players[0].position + 0.5f * vectorBetweenPlayers;
 
