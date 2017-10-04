@@ -30,6 +30,9 @@ public class PlayerCamera : MonoBehaviour
     {
         if (mainCamera.GetComponent<Camera>().enabled == false) return;
 
+        if (transform.position.z >= players[0].position.z || transform.position.z >= players[1].position.z)
+            transform.position = new Vector3(transform.position.x, transform.position.y, -500);
+
         Vector3 vectorBetweenPlayers = players[1].position - players[0].position;
         Vector3 middlePoint = players[0].position + 0.5f * vectorBetweenPlayers;
 
