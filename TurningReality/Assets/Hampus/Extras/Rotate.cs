@@ -73,7 +73,6 @@ public class Rotate : MonoBehaviour
 
     public void Update()
     {
-
         if (!rotating)
         {
             // Used to check whether the rotation is positive or negative
