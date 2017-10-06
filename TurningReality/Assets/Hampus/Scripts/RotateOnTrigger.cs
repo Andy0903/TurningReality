@@ -54,8 +54,8 @@ public class RotateOnTrigger : MonoBehaviour
             print(Vector3.Distance(startAngle, targetAngle));
             if (Vector3.Distance(startAngle, targetAngle) <= 1)
             {
-            player.transform.eulerAngles = Vector3.zero;
-            player2.transform.eulerAngles = Vector3.zero;
+                player.transform.eulerAngles = Vector3.zero;
+                player2.transform.eulerAngles = Vector3.zero;
                 rotating = false;
                 startAngle = targetAngle;
                 isActivated = false;

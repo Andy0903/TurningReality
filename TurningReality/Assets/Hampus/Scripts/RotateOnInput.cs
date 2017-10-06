@@ -64,6 +64,8 @@ public class RotateOnInput : MonoBehaviour
     private bool rotating = false;
     GameObject worldCamera;
     GameObject mainCamera;
+    private GameObject player, player2;
+
 
     public void Start()
     {
@@ -74,6 +76,9 @@ public class RotateOnInput : MonoBehaviour
 
         worldCamera = GameObject.FindGameObjectWithTag("WorldCamera");
         mainCamera = Camera.main.gameObject;
+
+        player = GameObject.FindGameObjectsWithTag("Player")[0];
+        player2 = GameObject.FindGameObjectsWithTag("Player")[1];
     }
 
     private void SwitchToWorldCamera()
@@ -119,11 +124,12 @@ public class RotateOnInput : MonoBehaviour
             //currentAngle = Vector3.Lerp(currentAngle, Vector3.zero, Time.deltaTime);
             startAngle += currentAngle;
             transform.Rotate(currentAngle, Space.World);
-            print(currentAngle);
         }
 
         if (Vector3.Distance(startAngle, targetAngle) <= tiltAngle && Vector3.Distance(targetAngle, startAngle) >= tiltAngle)
         {
+            player.transform.eulerAngles = Vector3.zero;
+            player2.transform.eulerAngles = Vector3.zero;
             rotating = false;
             startAngle = targetAngle;
         }
