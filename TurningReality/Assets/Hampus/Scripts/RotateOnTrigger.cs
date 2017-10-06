@@ -9,20 +9,23 @@ public class RotateOnTrigger : MonoBehaviour
     private bool rotating = false;
     private Transform worldTrans;
 
-    private GameObject player, player2;
-    private float coolDown = 5, startCoolDownTime = 5;
+    private List<GameObject> objectsToCorrectRotation = new List<GameObject>();
+    private float currentCoolDown = 5, startCoolDown = 5;
+    private bool isActivated = false, isCooledDown = true;
 
     public Vector3 Axis;
     public float Direction;
-    public bool isActivated = false, isCooledDown = true;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (/*Input.GetAxis("Jump") > 0 &&*/ !isActivated && coolDown == startCoolDownTime)
+        if (/*Input.GetAxis("Jump") > 0 &&*/ !isActivated && currentCoolDown == startCoolDown)
         {
-            if (other == player.GetComponent<Collider>() || other == player2.GetComponent<Collider>())
+            foreach (GameObject obj in objectsToCorrectRotation)
             {
-                isActivated = true;
+                if(other == obj.GetComponent<Collider>())
+                {
+                    isActivated = true;
+                }
             }
         }
     }
@@ -30,8 +33,11 @@ public class RotateOnTrigger : MonoBehaviour
     public void Start()
     {
         worldTrans = GameObject.FindGameObjectWithTag("WorldOrigin").transform;
-        player = GameObject.FindGameObjectsWithTag("Player")[0];
-        player2 = GameObject.FindGameObjectsWithTag("Player")[1];
+        for (int i = 0; i < GameObject.FindGameObjectsWithTag("Player").Length; i++)
+        {
+            objectsToCorrectRotation.Add(GameObject.FindGameObjectsWithTag("Player")[i]);
+        }
+
         startAngle = worldTrans.eulerAngles;
         currentAngle = startAngle;
         targetAngle = startAngle;
@@ -51,23 +57,30 @@ public class RotateOnTrigger : MonoBehaviour
             startAngle += currentAngle;
             worldTrans.Rotate(currentAngle, Space.World);
 
-            print(Vector3.Distance(startAngle, targetAngle));
             if (Vector3.Distance(startAngle, targetAngle) <= 1)
             {
-                player.transform.eulerAngles = Vector3.zero;
-                player2.transform.eulerAngles = Vector3.zero;
+                foreach (GameObject obj in objectsToCorrectRotation)
+                {
+                    obj.transform.eulerAngles = Vector3.zero;
+                }
+
                 rotating = false;
                 startAngle = targetAngle;
                 isActivated = false;
             }
         }
+        CoolDown();
+    }
+
+    private void CoolDown()
+    {
         if (!isCooledDown)
         {
-            coolDown -= Time.deltaTime;
-            if (coolDown <= 0)
+            currentCoolDown -= Time.deltaTime;
+            if (currentCoolDown <= 0)
             {
                 isCooledDown = true;
-                coolDown = startCoolDownTime;
+                currentCoolDown = startCoolDown;
             }
         }
     }
