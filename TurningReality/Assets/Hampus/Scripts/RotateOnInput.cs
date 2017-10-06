@@ -65,8 +65,7 @@ public class RotateOnInput : MonoBehaviour
     GameObject worldCamera;
     GameObject mainCamera;
     private GameObject player, player2;
-
-
+    
     public void Start()
     {
         cameraTransform = Camera.main.transform;
@@ -79,6 +78,7 @@ public class RotateOnInput : MonoBehaviour
 
         player = GameObject.FindGameObjectsWithTag("Player")[0];
         player2 = GameObject.FindGameObjectsWithTag("Player")[1];
+
     }
 
     private void SwitchToWorldCamera()
@@ -102,14 +102,21 @@ public class RotateOnInput : MonoBehaviour
         if (!rotating)
         {
             SwitchToMainCamera();
-            // Used to check whether the rotation is positive or negative
-            float inputLeftRight = Input.GetAxis("RotY"),
-                inputUpDown = Input.GetAxis("RotX");
+            
+            // Used to check whether the rotation is positive or negative            
+            float inputLeftRight = player.GetComponent<DpadManager>().CountY,
+                inputUpDown = player.GetComponent<DpadManager>().CountX;
+
+            if (inputLeftRight == 0 && inputUpDown == 0)
+            {
+                inputLeftRight = player2.GetComponent<DpadManager>().CountY;
+                inputUpDown = player2.GetComponent<DpadManager>().CountX;
+            }
 
             // If register input start rotation
             if (inputLeftRight != 0)
             {
-                currentAngle = SetRotationToInput(Vector3.right, inputLeftRight);
+                currentAngle = SetRotationToInput(Vector3.right, -inputLeftRight);
             }
             else if (inputUpDown != 0)
             {
