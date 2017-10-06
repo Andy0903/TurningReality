@@ -55,7 +55,7 @@ public class GlowObject : MonoBehaviour
         {
             if (hit.transform.tag != "Player")
             {
-                Debug.Log("Player is occluded by " + hit.transform.name);
+                //Debug.Log("Player is occluded by " + hit.transform.name);
                 targetColor = glowColor;
             }
             else

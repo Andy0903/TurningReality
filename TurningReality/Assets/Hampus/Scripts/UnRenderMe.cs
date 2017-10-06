@@ -19,7 +19,7 @@ public class UnRenderMe : MonoBehaviour
         float dot = Vector3.Dot(new Vector3(0, 0, 1), transform.right);
         if (dot > 0.5)
         {
-            gameObject.GetComponent<Renderer>().material.color = new Color(startColor.r, startColor.g, startColor.b, 0.2f + (1 - dot));
+            gameObject.GetComponent<Renderer>().material.color = new Color(startColor.r, startColor.g, startColor.b, 0.1f + (1 - dot));
             //GetComponent<MeshRenderer>().enabled = false;
         }
         else

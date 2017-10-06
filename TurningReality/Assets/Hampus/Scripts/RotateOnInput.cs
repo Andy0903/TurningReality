@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rotate : MonoBehaviour
+public class RotateOnInput : MonoBehaviour
 {
     //private Vector3 targetAngle;
     //private Vector3 currentAngle;
