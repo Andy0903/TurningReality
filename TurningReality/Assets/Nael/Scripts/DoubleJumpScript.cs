@@ -5,7 +5,8 @@ using UnityStandardAssets.Characters.ThirdPerson;
 
 public class DoubleJumpScript : MonoBehaviour
 {
-    ThirdPersonCharacter tpc;
+    ThirdPersonCharacter tpc1;
+    ThirdPersonCharacter tpc2;
     public AudioClip soundFX;
     GameObject spellParticles;
     Collider col;
@@ -18,7 +19,8 @@ public class DoubleJumpScript : MonoBehaviour
 
     void Start()
     {
-        tpc = GameObject.FindObjectOfType<ThirdPersonCharacter>();
+        tpc1 = GameObject.FindObjectsOfType<ThirdPersonCharacter>()[0];
+        tpc2 = GameObject.FindObjectsOfType<ThirdPersonCharacter>()[1];
         col = GetComponent<Collider>();
         particleSystems = GetComponentsInChildren<ParticleSystem>();
     }
@@ -30,7 +32,16 @@ public class DoubleJumpScript : MonoBehaviour
             GetComponent<AudioSource>().PlayOneShot(soundFX);
             pickupTime = Time.realtimeSinceStartup;
             FlipStates();
-            tpc.doubleJump = true;
+
+            if (other.GetInstanceID() == tpc1.GetInstanceID())
+            {
+                tpc1.doubleJump = true;
+            }
+            else if (other.GetInstanceID() == tpc2.GetInstanceID())
+            {
+                tpc2.doubleJump = true;
+            }
+            
             powerUpEnds = false;
         }
     }
@@ -44,7 +55,8 @@ public class DoubleJumpScript : MonoBehaviour
         }
         if (timer >= pickupTime + powerUpEndsTime && !powerUpEnds)
         {
-            tpc.doubleJump = false;
+            tpc1.doubleJump = false;
+            tpc2.doubleJump = false;
             powerUpEnds = true;
         }
     }
