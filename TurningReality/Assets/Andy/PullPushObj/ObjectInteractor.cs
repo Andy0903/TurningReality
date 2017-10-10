@@ -15,11 +15,13 @@ public class ObjectInteractor : MonoBehaviour
     [SerializeField]
     float interactionRange = 2f;
     [SerializeField]
-    float minDistance = 0.3f;
+    float minDistance = 0f;
     [SerializeField]
     float maxDistance = 50f;
     [SerializeField]
     Vector3 holdOffset = new Vector3(0f, -0.2f, 0f);
+
+    Vector3 grabRotation;
 
     private void Start()
     {
@@ -37,11 +39,15 @@ public class ObjectInteractor : MonoBehaviour
             target = hit.transform;
             //target.transform.position = target.transform.position - holdOffset;
 
+            grabRotation = transform.eulerAngles;
             target.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+
+            target.SetParent(transform);
             FixedJoint joint = target.gameObject.AddComponent<FixedJoint>();
             joint.connectedBody = gameObject.GetComponent<Rigidbody>();
             joint.breakForce = Mathf.Infinity;
             joint.breakTorque = Mathf.Infinity;
+            Debug.Log("!");
         }
         Debug.Log(target);
     }
@@ -54,7 +60,6 @@ public class ObjectInteractor : MonoBehaviour
                 || slot == PlayerSlot.Second && CrossPlatformInputManager.GetButtonDown("Interact_P2"))
             {
                 CastRay();
-                Debug.Log("!");
             }
         }
         else if ((slot == PlayerSlot.First && CrossPlatformInputManager.GetButtonDown("Interact_P1"))
@@ -64,6 +69,8 @@ public class ObjectInteractor : MonoBehaviour
         }
         else
         {
+            transform.eulerAngles = grabRotation;
+
             Vector3 fromTargetToPlayer = transform.position - target.position;
             float distance = fromTargetToPlayer.magnitude;
             Vector3 direction = fromTargetToPlayer.normalized;
@@ -80,10 +87,12 @@ public class ObjectInteractor : MonoBehaviour
     private void DropObject()
     {
         // target.GetComponent<Rigidbody>().isKinematic = false;
-        // target.SetParent(targetParent);
-        // targetParent = null;
+        target.SetParent(targetParent);
+        targetParent = null;
+
         target.gameObject.GetComponent<Rigidbody>().isKinematic = true;
         Destroy(target.gameObject.GetComponent<FixedJoint>());
+
         target = null;
     }
 }
