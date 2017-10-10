@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.Characters.ThirdPerson;
 
 public class RotateOnInput : MonoBehaviour
 {
@@ -65,7 +66,7 @@ public class RotateOnInput : MonoBehaviour
     GameObject worldCamera;
     GameObject mainCamera;
     private GameObject player, player2;
-    
+
     public void Start()
     {
         cameraTransform = Camera.main.transform;
@@ -102,28 +103,77 @@ public class RotateOnInput : MonoBehaviour
         if (!rotating)
         {
             SwitchToMainCamera();
-            
-            // Used to check whether the rotation is positive or negative            
-            float inputLeftRight = player.GetComponent<DpadManager>().CountY,
+
+            float inputLeftRight = 0;
+            float inputUpDown = 0;
+
+            // Used to check whether the rotation is positive or negative           
+            if (player.GetComponent<ThirdPersonUserControl>().PlayerControls == PlayerSlot.KeyboardDebug)
+            {
+                inputLeftRight = Input.GetAxis("RotY");
+                inputUpDown = Input.GetAxis("RotX");
+
+                if (inputLeftRight == 0 && inputUpDown == 0)
+                {
+                    inputLeftRight = player2.GetComponent<DpadManager>().CountY;
+                    inputUpDown = player2.GetComponent<DpadManager>().CountX;
+                }
+
+                // If register input start rotation
+                if (inputLeftRight != 0)
+                {
+                    currentAngle = SetRotationToInput(Vector3.right, inputLeftRight);
+                }
+                else if (inputUpDown != 0)
+                {
+                    currentAngle = SetRotationToInput(Vector3.forward, inputUpDown);
+                }
+
+                targetAngle = currentAngle * tiltAngle;
+            }
+            else
+            {
+                inputLeftRight = player.GetComponent<DpadManager>().CountY;
                 inputUpDown = player.GetComponent<DpadManager>().CountX;
 
-            if (inputLeftRight == 0 && inputUpDown == 0)
-            {
-                inputLeftRight = player2.GetComponent<DpadManager>().CountY;
-                inputUpDown = player2.GetComponent<DpadManager>().CountX;
-            }
+                if (inputLeftRight == 0 && inputUpDown == 0)
+                {
+                    inputLeftRight = player2.GetComponent<DpadManager>().CountY;
+                    inputUpDown = player2.GetComponent<DpadManager>().CountX;
+                }
 
-            // If register input start rotation
-            if (inputLeftRight != 0)
-            {
-                currentAngle = SetRotationToInput(Vector3.right, -inputLeftRight);
-            }
-            else if (inputUpDown != 0)
-            {
-                currentAngle = SetRotationToInput(Vector3.forward, inputUpDown);
-            }
+                // If register input start rotation
+                if (inputLeftRight != 0)
+                {
+                    currentAngle = SetRotationToInput(Vector3.right, -inputLeftRight);
+                }
+                else if (inputUpDown != 0)
+                {
+                    currentAngle = SetRotationToInput(Vector3.forward, inputUpDown);
+                }
 
-            targetAngle = currentAngle * tiltAngle;
+                targetAngle = currentAngle * tiltAngle;
+            }
+            //float inputLeftRight = player.GetComponent<DpadManager>().CountY,
+            //    inputUpDown = player.GetComponent<DpadManager>().CountX;
+
+            //if (inputLeftRight == 0 && inputUpDown == 0)
+            //{
+            //    inputLeftRight = player2.GetComponent<DpadManager>().CountY;
+            //    inputUpDown = player2.GetComponent<DpadManager>().CountX;
+            //}
+
+            //// If register input start rotation
+            //if (inputLeftRight != 0)
+            //{
+            //    currentAngle = SetRotationToInput(Vector3.right, -inputLeftRight);
+            //}
+            //else if (inputUpDown != 0)
+            //{
+            //    currentAngle = SetRotationToInput(Vector3.forward, inputUpDown);
+            //}
+
+            //targetAngle = currentAngle * tiltAngle;
         }
         else
         {
