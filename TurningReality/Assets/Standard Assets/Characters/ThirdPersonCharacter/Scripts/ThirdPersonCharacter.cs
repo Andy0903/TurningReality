@@ -62,7 +62,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
             m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
             m_OrigGroundCheckDistance = m_GroundCheckDistance;
-            thirdPControl = GameObject.FindObjectOfType<ThirdPersonUserControl>();
+            thirdPControl = GetComponent<ThirdPersonUserControl>();
         }
 
 
@@ -184,14 +184,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             }
             else if (thirdPControl.PlayerControls == PlayerSlot.First)
             {
-                if (CrossPlatformInputManager.GetButtonDown("Horizontal_P1") || CrossPlatformInputManager.GetButtonDown("Vertical_P1"))
+                if (CrossPlatformInputManager.GetAxis("Horizontal_P1") != 0 || CrossPlatformInputManager.GetAxis("Vertical_P1") != 0)
                 {
                     m_Rigidbody.AddForce(forwardF);
                 }
             }
             else if (thirdPControl.PlayerControls == PlayerSlot.Second)
             {
-                if (CrossPlatformInputManager.GetButtonDown("Horizontal_P2") || CrossPlatformInputManager.GetButtonDown("Vertical_P2"))
+                if (CrossPlatformInputManager.GetAxis("Horizontal_P2") != 0 || CrossPlatformInputManager.GetAxis("Vertical_P2") != 0)
                 {
                     m_Rigidbody.AddForce(forwardF);
                 }

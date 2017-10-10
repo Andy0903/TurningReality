@@ -21,11 +21,14 @@ public class ObjectInteractor : MonoBehaviour
     [SerializeField]
     Vector3 holdOffset = new Vector3(0f, -0.2f, 0f);
 
+
+    Rigidbody rb;
     Vector3 grabRotation;
 
     private void Start()
     {
         slot = gameObject.GetComponent<ThirdPersonUserControl>().PlayerControls;
+        rb = gameObject.GetComponent<Rigidbody>();
     }
 
     void CastRay()
@@ -70,6 +73,35 @@ public class ObjectInteractor : MonoBehaviour
         else
         {
             transform.eulerAngles = grabRotation;
+
+            Vector3 backwardF = 1 * -transform.forward * Time.deltaTime;
+            if (Input.GetAxis("Horizontal") < 0 || Input.GetAxis("Vertical") < 0)
+            {
+                if (target.GetComponent<Rigidbody>().mass < 20)
+                {
+                    transform.Translate(backwardF);
+                }
+            }
+            else if (slot == PlayerSlot.First)
+            {
+                if (CrossPlatformInputManager.GetAxis("Horizontal_P1") < 0 || CrossPlatformInputManager.GetAxis("Vertical_P1") < 0)
+                {
+                    if (target.GetComponent<Rigidbody>().mass < 20)
+                    {
+                        transform.Translate(backwardF);
+                    }
+                }
+            }
+            else if (slot == PlayerSlot.Second)
+            {
+                if (CrossPlatformInputManager.GetAxis("Horizontal_P2") < 0 || CrossPlatformInputManager.GetAxis("Vertical_P2") < 0)
+                {
+                    if (target.GetComponent<Rigidbody>().mass < 20)
+                    {
+                        transform.Translate(backwardF);
+                    }
+                }
+            }
 
             Vector3 fromTargetToPlayer = transform.position - target.position;
             float distance = fromTargetToPlayer.magnitude;
