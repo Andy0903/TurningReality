@@ -54,9 +54,10 @@ public class ObjectInteractor : MonoBehaviour
                 || slot == PlayerSlot.Second && CrossPlatformInputManager.GetButtonDown("Interact_P2"))
             {
                 CastRay();
+                Debug.Log("!");
             }
         }
-        else if (slot == PlayerSlot.First && CrossPlatformInputManager.GetButtonDown("Interact_P1")
+        else if ((slot == PlayerSlot.First && CrossPlatformInputManager.GetButtonDown("Interact_P1"))
                 || slot == PlayerSlot.Second && CrossPlatformInputManager.GetButtonDown("Interact_P2"))
         {
             DropObject();
