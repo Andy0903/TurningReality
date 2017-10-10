@@ -177,6 +177,26 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
         void HandleAirborneMovement()
         {
+            Vector3 forwardF = 10 * transform.forward;
+            if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+            {
+                m_Rigidbody.AddForce(forwardF);
+            }
+            else if (thirdPControl.PlayerControls == PlayerSlot.First)
+            {
+                if (CrossPlatformInputManager.GetButtonDown("Horizontal_P1") || CrossPlatformInputManager.GetButtonDown("Vertical_P1"))
+                {
+                    m_Rigidbody.AddForce(forwardF);
+                }
+            }
+            else if (thirdPControl.PlayerControls == PlayerSlot.Second)
+            {
+                if (CrossPlatformInputManager.GetButtonDown("Horizontal_P2") || CrossPlatformInputManager.GetButtonDown("Vertical_P2"))
+                {
+                    m_Rigidbody.AddForce(forwardF);
+                }
+            }
+
             if (CrossPlatformInputManager.GetButtonDown("Jump"))
             {
                 if (doubleJump)
