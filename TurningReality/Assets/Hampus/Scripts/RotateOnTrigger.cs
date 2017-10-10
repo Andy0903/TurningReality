@@ -9,23 +9,20 @@ public class RotateOnTrigger : MonoBehaviour
     private bool rotating = false;
     private Transform worldTrans;
 
-    private List<GameObject> objectsToCorrectRotation = new List<GameObject>();
-    private float currentCoolDown = 5, startCoolDown = 5;
-    private bool isActivated = false, isCooledDown = true;
+    private GameObject player, player2;
+    private float coolDown = 5, startCoolDownTime = 5;
 
     public Vector3 Axis;
     public float Direction;
+    public bool isActivated = false, isCooledDown = true;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (/*Input.GetAxis("Jump") > 0 &&*/ !isActivated && currentCoolDown == startCoolDown)
+        if (/*Input.GetAxis("Jump") > 0 &&*/ !isActivated && isCooledDown)
         {
-            foreach (GameObject obj in objectsToCorrectRotation)
+            if (other == player.GetComponent<Collider>() || other == player2.GetComponent<Collider>())
             {
-                if(other == obj.GetComponent<Collider>())
-                {
-                    isActivated = true;
-                }
+                isActivated = true;
             }
         }
     }
@@ -33,11 +30,8 @@ public class RotateOnTrigger : MonoBehaviour
     public void Start()
     {
         worldTrans = GameObject.FindGameObjectWithTag("WorldOrigin").transform;
-        for (int i = 0; i < GameObject.FindGameObjectsWithTag("Player").Length; i++)
-        {
-            objectsToCorrectRotation.Add(GameObject.FindGameObjectsWithTag("Player")[i]);
-        }
-
+        player = GameObject.FindGameObjectsWithTag("Player")[0];
+        player2 = GameObject.FindGameObjectsWithTag("Player")[1];
         startAngle = worldTrans.eulerAngles;
         currentAngle = startAngle;
         targetAngle = startAngle;
@@ -47,7 +41,6 @@ public class RotateOnTrigger : MonoBehaviour
     {
         if (!rotating)
         {
-            rotating = true;
             currentAngle = SetRotationToInput(Axis, Direction);
             targetAngle = currentAngle * tiltAngle;
         }
@@ -56,31 +49,24 @@ public class RotateOnTrigger : MonoBehaviour
             //currentAngle = Vector3.Lerp(currentAngle, Vector3.zero, Time.deltaTime);
             startAngle += currentAngle;
             worldTrans.Rotate(currentAngle, Space.World);
-
-            if (Vector3.Distance(startAngle, targetAngle) <= 1)
-            {
-                foreach (GameObject obj in objectsToCorrectRotation)
-                {
-                    obj.transform.eulerAngles = Vector3.zero;
-                }
-
-                rotating = false;
-                startAngle = targetAngle;
-                isActivated = false;
-            }
         }
-        CoolDown();
-    }
 
-    private void CoolDown()
-    {
+        if (Vector3.Distance(startAngle, targetAngle) <= tiltAngle && Vector3.Distance(targetAngle, startAngle) >= tiltAngle)
+        {
+            player.transform.eulerAngles = Vector3.zero;
+            player2.transform.eulerAngles = Vector3.zero;
+            rotating = false;
+            isActivated = false;
+            startAngle = targetAngle;
+        }
+
         if (!isCooledDown)
         {
-            currentCoolDown -= Time.deltaTime;
-            if (currentCoolDown <= 0)
+            coolDown -= Time.deltaTime;
+            if (coolDown <= 0)
             {
                 isCooledDown = true;
-                currentCoolDown = startCoolDown;
+                coolDown = startCoolDownTime;
             }
         }
     }
