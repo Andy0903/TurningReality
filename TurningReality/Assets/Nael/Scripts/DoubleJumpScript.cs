@@ -33,11 +33,11 @@ public class DoubleJumpScript : MonoBehaviour
             pickupTime = Time.realtimeSinceStartup;
             FlipStates();
 
-            if (other.GetInstanceID() == tpc1.GetInstanceID())
+            if (other.gameObject.GetInstanceID() == tpc1.gameObject.GetInstanceID())
             {
                 tpc1.doubleJump = true;
             }
-            else if (other.GetInstanceID() == tpc2.GetInstanceID())
+            else if (other.gameObject.GetInstanceID() == tpc2.gameObject.GetInstanceID())
             {
                 tpc2.doubleJump = true;
             }

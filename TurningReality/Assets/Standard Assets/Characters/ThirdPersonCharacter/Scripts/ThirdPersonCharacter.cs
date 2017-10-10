@@ -219,6 +219,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 if (CrossPlatformInputManager.GetButtonDown("Jump_P2"))
                 {
+                    Debug.Log("af");
                     DoubleJump();
                 }
             }
@@ -233,6 +234,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         {
             if (doubleJump)
             {
+                Debug.Log("af2");
                 //doubleJump = false;
                 m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower * JumpPowerMultiplier, m_Rigidbody.velocity.z);
                 m_IsGrounded = false;
