@@ -14,7 +14,7 @@ public class DoubleJumpScript : MonoBehaviour
     float timer;
     float pickupTime;
     float powerUpTime = 10;
-    float powerUpEndsTime = 20;
+    float powerUpEndsTime = 10;
     bool powerUpEnds = true;
 
     void Start()
@@ -47,13 +47,13 @@ public class DoubleJumpScript : MonoBehaviour
     }
     void Update()
     {
-        timer += Time.deltaTime;
+       // timer += Time.deltaTime;
 
-        if (timer >= pickupTime + powerUpTime && col.enabled == false)
+        if (Time.realtimeSinceStartup >= pickupTime + powerUpTime && col.enabled == false)
         {
             FlipStates();
         }
-        if (timer >= pickupTime + powerUpEndsTime && !powerUpEnds)
+        if (Time.realtimeSinceStartup >= pickupTime + powerUpEndsTime && !powerUpEnds)
         {
             tpc1.doubleJump = false;
             tpc2.doubleJump = false;
@@ -68,10 +68,12 @@ public class DoubleJumpScript : MonoBehaviour
         {
             if (pSys.isPlaying)
             {
+                Debug.Log("stop");
                 pSys.Stop();
             }
-            if (pSys.isStopped)
+            else if (pSys.isStopped)
             {
+                Debug.Log("play");
                 pSys.Play();
             }
         }
